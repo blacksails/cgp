@@ -1,3 +1,4 @@
+[![](https://godoc.org/github.com/blacksails/cgp?status.svg)](http://godoc.org/github.com/blacksails/cgp)
 # CGP
 
 This is a go api wrapper for the excellent Communigate Pro mailserver.
