@@ -41,7 +41,7 @@ func (cgp CGP) request(req, res interface{}) error {
 	}
 	defer httpRes.Body.Close()
 
-	// Unmarshal request
+	// Unmarshal response
 	envel := envelope{Body: body{Response: response{Object: res}}}
 	err = xml.NewDecoder(httpRes.Body).Decode(&envel)
 	if err != nil {
