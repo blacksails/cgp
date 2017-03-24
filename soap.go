@@ -20,6 +20,13 @@ type response struct {
 	Object interface{} `xml:"object"`
 }
 
+// SOAPNotFoundError is returned when we cannot find a soap resource.
+type SOAPNotFoundError struct{}
+
+func (err SOAPNotFoundError) Error() string {
+	return "The requested resource could not be found"
+}
+
 func (cgp CGP) request(req, res interface{}) error {
 	// Build request
 	var b bytes.Buffer
@@ -42,6 +49,9 @@ func (cgp CGP) request(req, res interface{}) error {
 	defer httpRes.Body.Close()
 
 	// Unmarshal response
+	if httpRes.StatusCode == http.StatusInternalServerError {
+		return SOAPNotFoundError{}
+	}
 	envel := envelope{Body: body{Response: response{Object: res}}}
 	err = xml.NewDecoder(httpRes.Body).Decode(&envel)
 	if err != nil {

@@ -8,6 +8,24 @@ type Domain struct {
 	Name string
 }
 
+type getDomainSettings struct {
+	XMLName xml.Name `xml:"getDomainSettings"`
+	Domain  string   `xml:"param"`
+}
+
+// Exists returns true if the domain
+func (dom Domain) Exists() (bool, error) {
+	var d dictionary
+	err := dom.cgp.request(getDomainSettings{Domain: dom.Name}, &d)
+	if _, ok := err.(SOAPNotFoundError); ok {
+		return false, nil
+	}
+	if err != nil {
+		return false, err
+	}
+	return true, nil
+}
+
 type listDomains struct {
 	XMLName xml.Name `xml:"listDomains"`
 }
