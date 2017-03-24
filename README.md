@@ -8,7 +8,7 @@ This is a go api wrapper for the excellent Communigate Pro mailserver.
 Create an api client
 
 ```go
-c := cgp.New("https://server.hostname/CLI/", "username", "password")
+c := cgp.New("server.hostname.com", "username", "password")
 ```
 
 For API instuctions of the client see the go-docs

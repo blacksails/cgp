@@ -3,6 +3,7 @@ package cgp
 import (
 	"bytes"
 	"encoding/xml"
+	"fmt"
 	"net/http"
 )
 
@@ -28,7 +29,7 @@ func (cgp CGP) request(req, res interface{}) error {
 		return err
 	}
 	b.WriteString("</SOAP-ENV:Body></SOAP-ENV:Envelope>")
-	httpReq, err := http.NewRequest("POST", cgp.url, &b)
+	httpReq, err := http.NewRequest("POST", fmt.Sprintf("https://%s/CLI/", cgp.url), &b)
 	httpReq.SetBasicAuth(cgp.user, cgp.pass)
 	httpReq.Header.Set("Content-Type", "application/soap+xml")
 
