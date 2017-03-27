@@ -26,6 +26,21 @@ func (dom Domain) Exists() (bool, error) {
 	return true, nil
 }
 
+type getDomainAliases struct {
+	XMLName xml.Name `xml:"getDomainAliases"`
+	Domain  string   `xml:"param"`
+}
+
+// Aliases returns a list of domain aliases
+func (dom Domain) Aliases() ([]string, error) {
+	var vl valueList
+	err := cgp.request(getDomainAliases{Domain: dom.Name}, &vl)
+	if err != nil {
+		return []string{}, err
+	}
+	return vl.compact()
+}
+
 type listDomains struct {
 	XMLName xml.Name `xml:"listDomains"`
 }
