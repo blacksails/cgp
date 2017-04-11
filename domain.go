@@ -34,11 +34,11 @@ type getDomainAliases struct {
 // Aliases returns a list of domain aliases
 func (dom Domain) Aliases() ([]string, error) {
 	var vl valueList
-	err := cgp.request(getDomainAliases{Domain: dom.Name}, &vl)
+	err := dom.cgp.request(getDomainAliases{Domain: dom.Name}, &vl)
 	if err != nil {
 		return []string{}, err
 	}
-	return vl.compact()
+	return vl.compact(), nil
 }
 
 type listDomains struct {
