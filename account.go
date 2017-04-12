@@ -16,14 +16,19 @@ type getAccountSettings struct {
 	Account string   `xml:"param"`
 }
 
+// RealName return the real name of the account as registered
 func (a Account) RealName() (string, error) {
 	var d dictionary
-	acc := fmt.Sprintf("%s@%s", a.Name, a.Domain.Name)
-	err := a.Domain.cgp.request(getAccountSettings{Account: acc}, &d)
+	err := a.Domain.cgp.request(getAccountSettings{Account: a.Email()}, &d)
 	if err != nil {
 		return "", err
 	}
 	return d.toMap()["RealName"], nil
+}
+
+// Email returns the primary email of the account
+func (a Account) Email() string {
+	return fmt.Sprintf("%s@%s", a.Name, a.Domain.Name)
 }
 
 // Account returns an account type with the given name
