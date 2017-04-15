@@ -12,6 +12,11 @@ type Forwarder struct {
 	To     string
 }
 
+// Email returns the forwarder email on the primary domain
+func (f Forwarder) Email() string {
+	return fmt.Sprintf("%s@%s", f.Name, f.Domain.Name)
+}
+
 // Forwarder returns a forwarder type with the given from and dest
 func (dom *Domain) Forwarder(name, to string) *Forwarder {
 	return &Forwarder{Domain: dom, Name: name, To: to}
