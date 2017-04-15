@@ -16,6 +16,11 @@ func (acc *Account) Alias(name string) *Alias {
 	return &Alias{account: acc, Name: name}
 }
 
+// Email returns the alias email on the primary domain name
+func (a Alias) Email() string {
+	return fmt.Sprintf("%s@%s", a.Name, a.account.Domain.Name)
+}
+
 type listAliases struct {
 	XMLName xml.Name `xml:"getAccountAliases"`
 	Param   string   `xml:"param"`
