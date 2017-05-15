@@ -35,7 +35,7 @@ type readSubscribers struct {
 }
 
 type readSubscribersResponse struct {
-	SubValues []dictionaryList
+	SubValues []dictionaryList `xml:"subValue"`
 }
 
 // Subscribers returns a list of subscriber of a mailing list.
