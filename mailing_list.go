@@ -34,15 +34,20 @@ type readSubscribers struct {
 	Name    string   `xml:"param"`
 }
 
+type readSubscribersResponse struct {
+	SubValues []dictionaryList
+}
+
 // Subscribers returns a list of subscriber of a mailing list.
 func (ml *MailingList) Subscribers() ([]*Subscriber, error) {
-	var dl dictionaryList
-	err := ml.Domain.cgp.request(readSubscribers{Name: fmt.Sprintf("%s@%s", ml.Name, ml.Domain.Name)}, &dl)
+	var res readSubscribersResponse
+	err := ml.Domain.cgp.request(readSubscribers{Name: fmt.Sprintf("%s@%s", ml.Name, ml.Domain.Name)}, &res)
 	if err != nil {
 		return []*Subscriber{}, err
 	}
-	subs := make([]*Subscriber, len(dl.SubValues))
-	for i, d := range dl.SubValues {
+	ds := res.SubValues[1].SubValues
+	subs := make([]*Subscriber, len(ds))
+	for i, d := range ds {
 		m := d.toMap()
 		subs[i] = ml.Subscriber(m["Sub"], m["RealName"])
 	}
