@@ -89,6 +89,10 @@ type dictionary struct {
 	KeyValuePairs []keyValuePair `xml:"subKey"`
 }
 
+type dictionaryList struct {
+	SubValues []dictionary `xml:"subValue"`
+}
+
 func (d dictionary) toMap() map[string]string {
 	m := make(map[string]string, len(d.KeyValuePairs))
 	for _, kvp := range d.KeyValuePairs {

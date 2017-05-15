@@ -1,6 +1,9 @@
 package cgp
 
-import "encoding/xml"
+import (
+	"encoding/xml"
+	"fmt"
+)
 
 // MailingList represents a malinglist of a domain
 type MailingList struct {
@@ -11,6 +14,39 @@ type MailingList struct {
 // MailingList creates a MailingList type from a domain, with the given name
 func (dom *Domain) MailingList(name string) *MailingList {
 	return &MailingList{Domain: dom, Name: name}
+}
+
+// Subscriber represents a subscription to a mailinglist
+type Subscriber struct {
+	MailingList *MailingList
+	Email       string
+	RealName    string
+}
+
+// Subscriber create a Subscriber type from a MalingList, with the given email
+// and name
+func (ml *MailingList) Subscriber(email, name string) *Subscriber {
+	return &Subscriber{MailingList: ml, Email: email, RealName: name}
+}
+
+type readSubscribers struct {
+	XMLName xml.Name `xml:"readSubscribers"`
+	Name    string   `xml:"param"`
+}
+
+// Subscribers returns a list of subscriber of a mailing list.
+func (ml *MailingList) Subscribers() ([]*Subscriber, error) {
+	var dl dictionaryList
+	err := ml.Domain.cgp.request(readSubscribers{Name: fmt.Sprintf("%s@%s", ml.Name, ml.Domain.Name)}, &dl)
+	if err != nil {
+		return []*Subscriber{}, err
+	}
+	subs := make([]*Subscriber, len(dl.SubValues))
+	for i, d := range dl.SubValues {
+		m := d.toMap()
+		subs[i] = ml.Subscriber(m["Sub"], m["RealName"])
+	}
+	return subs, nil
 }
 
 type listLists struct {
